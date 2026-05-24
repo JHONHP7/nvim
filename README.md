@@ -76,6 +76,7 @@ mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
 
 # Criar a estrutura
 mkdir -p ~/.config/nvim/lua/plugins
+mkdir -p ~/.config/nvim/ftplugin
 
 # Copiar os arquivos desta config para ~/.config/nvim/
 ```
@@ -114,6 +115,8 @@ Instale com `i` em cima de cada um, ou use `:MasonInstall`:
 
 ```
 :MasonInstall jdtls
+:MasonInstall java-debug-adapter
+:MasonInstall java-test
 :MasonInstall typescript-language-server
 :MasonInstall html-lsp
 :MasonInstall lua-language-server
@@ -164,6 +167,9 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 | vim-fugitive | Git completo dentro do nvim | https://github.com/tpope/vim-fugitive |
 | vim-test | Rodar testes | https://github.com/vim-test/vim-test |
 | vimux | Rodar comandos no tmux/terminal | https://github.com/preservim/vimux |
+| nvim-jdtls | Java LSP com Lombok + Debug | https://github.com/mfussenegger/nvim-jdtls |
+| nvim-dap | Debug Adapter Protocol | https://github.com/mfussenegger/nvim-dap |
+| nvim-dap-ui | Interface visual do debug | https://github.com/rcarriga/nvim-dap-ui |
 | sonarlint.nvim | Análise de qualidade de código | https://gitlab.com/schrieveslaach/sonarlint.nvim |
 | copilot.vim | GitHub Copilot (sugestões inline) | https://github.com/github/copilot.vim |
 | CopilotChat.nvim | Chat com o Copilot | https://github.com/CopilotC-Nvim/CopilotChat.nvim |
@@ -231,6 +237,17 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 | `]d` | Próximo diagnóstico |
 | `Leader+gf` | Formata o arquivo atual |
 
+### Java — atalhos específicos
+
+| Atalho | Ação |
+|--------|------|
+| `Leader+jo` | Organiza imports |
+| `Leader+jv` | Extrai variável |
+| `Leader+jc` | Extrai constante |
+| `Leader+jm` | Extrai método (modo visual) |
+| `Leader+tm` | Roda o teste do método atual |
+| `Leader+tc` | Roda todos os testes da classe |
+
 ### Autocomplete (nvim-cmp)
 
 | Atalho | Ação |
@@ -284,6 +301,19 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 | `Leader+a` | Roda toda a suite |
 | `Leader+l` | Roda o último teste executado |
 | `Leader+g` | Vai para o arquivo de teste |
+
+### Debug (nvim-dap)
+
+| Atalho | Ação |
+|--------|------|
+| `Leader+dt` | Toggle breakpoint |
+| `Leader+dc` | Continuar / iniciar debug |
+| `Leader+di` | Step into (entra na função) |
+| `Leader+do` | Step over (pula a linha) |
+| `Leader+dO` | Step out (sai da função) |
+| `Leader+dx` | Termina a sessão de debug |
+| `Leader+du` | Toggle interface do debug |
+| `Leader+da` | Attach ao processo Java na porta 5005 |
 
 ### Vim — movimentação
 
@@ -355,7 +385,7 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 
 ```bash
 # Com profile de teste
-./mvnw spring-boot:run -Dspring-boot.run.profiles=test
+mvn spring-boot:run -Dspring-boot.run.arguments=--spring.profiles.active=test
 
 # Gradle
 ./gradlew bootRun --args='--spring.profiles.active=test'
@@ -363,17 +393,39 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 
 Use `Ctrl+t` para abrir o terminal integrado dentro do nvim e rodar esses comandos.
 
+### Debugar Spring Boot
+
+**Modo launch** (inicia e debuga direto):
+1. Abra um arquivo `.java`
+2. Coloque breakpoint com `Leader+dt`
+3. Pressione `Leader+dc`
+
+**Modo attach** (Spring Boot já rodando):
+
+Suba o projeto com a porta de debug:
+```bash
+mvn spring-boot:run \
+  -Dspring-boot.run.arguments=--spring.profiles.active=test \
+  -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+```
+
+Depois no nvim:
+1. Coloque breakpoints com `Leader+dt`
+2. Pressione `Leader+da` para conectar na porta 5005
+
+Para sair do debug: `Leader+dx`
+
 ### Instalar/gerenciar LSPs
 
 ```
-:Mason          → abre interface visual
-:MasonInstall X → instala pelo nome
+:Mason            → abre interface visual
+:MasonInstall X   → instala pelo nome
 :MasonUninstall X → remove
 ```
 
 ### Ver LSPs ativos no arquivo atual
 
-```lua
+```
 :lua vim.print(vim.lsp.get_clients())
 ```
 
@@ -405,6 +457,8 @@ Use `Ctrl+t` para abrir o terminal integrado dentro do nvim e rodar esses comand
 ├── lazy-lock.json              ← versões travadas dos plugins
 ├── lombok/
 │   └── lombok.jar              ← agente do Lombok para o jdtls
+├── ftplugin/
+│   └── java.lua                ← config do jdtls + debug para Java
 └── lua/
     ├── vim-options.lua         ← opções gerais e keymaps globais
     ├── plugins.lua             ← entry point (retorna {})
@@ -413,8 +467,10 @@ Use `Ctrl+t` para abrir o terminal integrado dentro do nvim e rodar esses comand
         ├── catppuccin.lua      ← tema
         ├── completions.lua     ← autocomplete (nvim-cmp + LuaSnip)
         ├── copilot.lua         ← GitHub Copilot + CopilotChat
+        ├── debugging.lua       ← nvim-dap + dap-ui
         ├── git-stuff.lua       ← gitsigns + vim-fugitive
-        ├── lsp-config.lua      ← Mason + LSPs (Java, TS, HTML, etc)
+        ├── jdtls.lua           ← plugin nvim-jdtls
+        ├── lsp-config.lua      ← Mason + LSPs (TS, HTML, Docker, etc)
         ├── lualine.lua         ← barra de status
         ├── neo-tree.lua        ← sidebar de arquivos
         ├── none-ls.lua         ← formatadores e linters
@@ -436,3 +492,5 @@ Use `Ctrl+t` para abrir o terminal integrado dentro do nvim e rodar esses comand
 - Lombok: https://projectlombok.org/download
 - Copilot: https://github.com/features/copilot
 - nvim-lspconfig LSPs disponíveis: https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
+- nvim-dap: https://github.com/mfussenegger/nvim-dap
+- nvim-jdtls: https://github.com/mfussenegger/nvim-jdtls
