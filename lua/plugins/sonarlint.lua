@@ -18,7 +18,7 @@ return {
           jar,
         },
       },
-      filetypes = { "java", "javascript", "typescript" },
+      filetypes = { "java", "javascript", "typescript", "tsx", "jsx", "python" },
     })
   end,
 }

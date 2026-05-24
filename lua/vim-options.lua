@@ -44,3 +44,11 @@ vim.keymap.set("t", "<C-t>", function()
     terminal_win = -1
   end
 end, {})
+
+-- Diagnósticos inline
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+})
