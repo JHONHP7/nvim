@@ -4,16 +4,12 @@ return {
     lazy = false,
     config = function()
       vim.g.copilot_no_tab_map = true
-      -- Aceita sugestão com Ctrl+l
       vim.keymap.set("i", "<C-l>", 'copilot#Accept("\\<CR>")', {
         expr = true,
         replace_keycodes = false,
       })
-      -- Próxima sugestão com Alt+]
       vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)")
-      -- Sugestão anterior com Alt+[
       vim.keymap.set("i", "<M-[>", "<Plug>(copilot-prev)")
-      -- Dispensar sugestão com Alt+e
       vim.keymap.set("i", "<M-e>", "<Plug>(copilot-dismiss)")
     end,
   },
@@ -23,7 +19,6 @@ return {
       "github/copilot.vim",
       "nvim-lua/plenary.nvim",
     },
-    build = "make tiktoken",
     config = function()
       require("CopilotChat").setup({
         window = {
