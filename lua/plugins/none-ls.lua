@@ -10,12 +10,12 @@ return {
         null_ls.builtins.formatting.google_java_format,
 
         -- Linters
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.diagnostics.stylelint,    -- CSS/SCSS
-        null_ls.builtins.diagnostics.hadolint,     -- Dockerfile
+        null_ls.builtins.diagnostics.stylelint,
+        null_ls.builtins.diagnostics.hadolint,
 
-        -- Code actions
-        null_ls.builtins.code_actions.eslint_d,
+        null_ls.builtins.diagnostics.checkstyle.with({
+          extra_args = {"-c", "google_checks.xml" }, -- ou "sun_checks.xml"
+        }),
       },
     })
 
