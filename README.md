@@ -173,6 +173,15 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 | sonarlint.nvim | Análise de qualidade de código | https://gitlab.com/schrieveslaach/sonarlint.nvim |
 | copilot.vim | GitHub Copilot (sugestões inline) | https://github.com/github/copilot.vim |
 | CopilotChat.nvim | Chat com o Copilot | https://github.com/CopilotC-Nvim/CopilotChat.nvim |
+| which-key.nvim | Mostra atalhos disponíveis | https://github.com/folke/which-key.nvim |
+| trouble.nvim | Lista de diagnósticos e erros | https://github.com/folke/trouble.nvim |
+| flash.nvim | Navegação rápida (jump) | https://github.com/folke/flash.nvim |
+| bufferline.nvim | Abas no topo para os buffers | https://github.com/akinsho/bufferline.nvim |
+| indent-blankline | Guias visuais de indentação | https://github.com/lukas-reineke/indent-blankline.nvim |
+| comment.nvim | Comentar linhas facilmente | https://github.com/numToStr/Comment.nvim |
+| nvim-autopairs | Fecha parênteses/chaves automático | https://github.com/windwp/nvim-autopairs |
+| nvim-ts-autotag | Fecha tags HTML/XML automático | https://github.com/windwp/nvim-ts-autotag |
+| beacon.nvim | Efeito visual ao pular o cursor | https://github.com/DanilaMihailov/beacon.nvim |
 
 ---
 
@@ -377,6 +386,21 @@ Acesse o link que aparecer, insira o código e autorize no GitHub.
 | `:wq` | Salva e fecha |
 | `:q!` | Fecha sem salvar |
 
+### Trouble — Gestão de Erros
+
+| Atalho | Ação |
+|--------|------|
+| `Leader+xx` | Abre/fecha a lista global de erros (Diagnostics) |
+| `Leader+xX` | Abre/fecha os erros apenas do arquivo atual |
+| `Leader+xq` | Abre/fecha a Quickfix list |
+
+### Flash — Navegação Rápida
+
+| Atalho | Ação |
+|--------|------|
+| `Leader+f` | Pula para qualquer palavra na tela (Flash Jump) |
+| `Leader+F` | Seleciona blocos de código inteiros (Flash Treesitter) |
+
 ---
 
 ## Como usar cada funcionalidade
@@ -479,6 +503,15 @@ Para sair do debug: `Leader+dx`
         ├── telescope.lua       ← busca de arquivos e texto
         ├── treesitter.lua      ← syntax highlighting
         └── vim-test.lua        ← rodar testes
+        ├── autopairs.lua       ← fechamento automático de pares
+        ├── autotag.lua         ← fechamento automático de tags
+        ├── beacon.lua          ← efeito visual do cursor
+        ├── bufferline.lua      ← abas de buffers no topo
+        ├── comment.lua         ← atalhos de comentários
+        ├── flash.lua           ← navegação rápida
+        ├── indent-blankline.lua← guias de indentação
+        ├── trouble.lua         ← lista de diagnósticos
+        └── which-key.lua       ← menu de atalhos
 ```
 
 ---
