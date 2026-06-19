@@ -10,6 +10,8 @@ vim.opt.splitright = true
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+vim.opt.wrap = false
+
 -- Navegação entre panes (nativo)
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
@@ -54,3 +56,4 @@ vim.diagnostic.config({
   underline = true,
   update_in_insert = false,
 })
+

@@ -8,7 +8,7 @@ return {
   },
   config = function()
     require("neo-tree").setup({
-      window = { width = 30 },
+      window = { width = 45 },
       filesystem = {
         follow_current_file = { enabled = true },
         hijack_netrw_behavior = "open_current",
