@@ -13,9 +13,10 @@ return {
         null_ls.builtins.diagnostics.stylelint,
         null_ls.builtins.diagnostics.hadolint,
 
-        null_ls.builtins.diagnostics.checkstyle.with({
-          extra_args = {"-c", "google_checks.xml" }, -- ou "sun_checks.xml"
-        }),
+        -- Comentei o Checkstyle para evitar logs no editor:
+        -- null_ls.builtins.diagnostics.checkstyle.with({
+        --   extra_args = {"-c", "google_checks.xml" },
+        -- }),
       },
     })
 
