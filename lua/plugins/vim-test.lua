@@ -1,14 +1,14 @@
 return {
-  "vim-test/vim-test",
-  dependencies = {
-    "preservim/vimux",
-  },
-  config = function()
-    vim.keymap.set("n", "<leader>t", ":TestNearest<CR>", {})
-    vim.keymap.set("n", "<leader>T", ":TestFile<CR>", {})
-    vim.keymap.set("n", "<leader>a", ":TestSuite<CR>", {})
-    vim.keymap.set("n", "<leader>l", ":TestLast<CR>", {})
-    vim.keymap.set("n", "<leader>g", ":TestVisit<CR>", {})
-    vim.cmd("let test#strategy = 'vimux'")
-  end,
+	"vim-test/vim-test",
+	cmd = { "TestNearest", "TestFile", "TestSuite", "LastTest", "TestVisit" },
+	keys = {
+		{ "<leader>t", "<cmd>TestNearest<CR>", desc = "Test Nearest" },
+		{ "<leader>T", "<cmd>TestFile<CR>", desc = "Test File" },
+		{ "<leader>a", "<cmd>TestSuite<CR>", desc = "Test Suite" },
+		{ "<leader>l", "<cmd>TestLast<CR>", desc = "Test Last" },
+		{ "<leader>g", "<cmd>TestVisit<CR>", desc = "Test Visit" },
+	},
+	config = function()
+		vim.cmd("let test#strategy = 'neovim'")
+	end,
 }
