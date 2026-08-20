@@ -16,7 +16,7 @@ return {
           "c",
           "cpp",
           "bash",
-          "markdown"
+          "markdown",
         },
         auto_install = true,
         highlight = { enable = true },

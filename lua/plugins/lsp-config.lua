@@ -27,7 +27,10 @@ return {
 			vim.lsp.config("dockerls", { capabilities = capabilities })
 			vim.lsp.config("cssls", { capabilities = capabilities })
 			vim.lsp.config("jsonls", { capabilities = capabilities })
-			vim.lsp.config("clangd", { capabilities = capabilities })
+			vim.lsp.config("clangd", {
+				cmd = { "/usr/bin/clangd", "--background-index" },
+				capabilities = capabilities,
+			})
 
 			vim.lsp.config("yamlls", {
 				capabilities = capabilities,
