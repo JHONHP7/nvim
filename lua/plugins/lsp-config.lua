@@ -23,7 +23,23 @@ return {
 
 			vim.lsp.config("ts_ls", { capabilities = capabilities })
 			vim.lsp.config("html", { capabilities = capabilities })
-			vim.lsp.config("lua_ls", { capabilities = capabilities })
+			vim.lsp.config("lua_ls", {
+				capabilities = capabilities,
+				settings = {
+					Lua = {
+						diagnostics = {
+							globals = { "vim" },
+						},
+						workspace = {
+							library = vim.api.nvim_get_runtime_file("", true),
+							checkThirdParty = false,
+						},
+						telemetry = {
+							enable = false,
+						},
+					},
+				},
+			})
 			vim.lsp.config("dockerls", { capabilities = capabilities })
 			vim.lsp.config("cssls", { capabilities = capabilities })
 			vim.lsp.config("jsonls", { capabilities = capabilities })
