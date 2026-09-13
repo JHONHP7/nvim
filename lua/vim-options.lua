@@ -20,6 +20,12 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
 
+-- Mover linhas com Alt + j / Alt + k
+vim.keymap.set("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move linha para baixo" })
+vim.keymap.set("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move linha para cima" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move bloco para baixo" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move bloco para cima" })
+
 -- Toggle terminal horizontal com Ctrl+t
 local terminal_buf = -1
 local terminal_win = -1
@@ -56,6 +62,21 @@ vim.diagnostic.config({
 	underline = true,
 	update_in_insert = false,
 })
+
+-- Corrige o erro '[Comment.nvim] nil' definindo o formato de comentário para C e C++
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "c", "cpp" },
+	callback = function()
+		vim.bo.commentstring = "// %s"
+	end,
+})
+
+-- Consultar manual cppman da palavra sob o cursor com <leader>cm
+vim.keymap.set("n", "<leader>cm", function()
+	local word = vim.fn.expand("<cword>")
+	vim.cmd("split | terminal cppman " .. word)
+	vim.cmd("startinsert")
+end, { desc = "Consultar cppman no cursor" })
 
 -- Compila e roda arquivos C e C++23 com módulos (import std) via F5
 vim.keymap.set("n", "<F5>", function()
