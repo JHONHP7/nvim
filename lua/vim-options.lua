@@ -20,6 +20,12 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
 
+-- Mover linhas com Alt + j / Alt + k
+vim.keymap.set("n", "<A-j>", "<cmd>m .+1<CR>==", { desc = "Move linha para baixo" })
+vim.keymap.set("n", "<A-k>", "<cmd>m .-2<CR>==", { desc = "Move linha para cima" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move bloco para baixo" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move bloco para cima" })
+
 -- Toggle terminal horizontal com Ctrl+t
 local terminal_buf = -1
 local terminal_win = -1
@@ -57,25 +63,43 @@ vim.diagnostic.config({
 	update_in_insert = false,
 })
 
+-- Corrige o erro '[Comment.nvim] nil' definindo o formato de comentário para C e C++
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "c", "cpp" },
+	callback = function()
+		vim.bo.commentstring = "// %s"
+	end,
+})
+
+-- Consultar manual cppman da palavra sob o cursor com <leader>cm
+vim.keymap.set("n", "<leader>cm", function()
+	local word = vim.fn.expand("<cword>")
+	vim.cmd("split | terminal cppman " .. word)
+	vim.cmd("startinsert")
+end, { desc = "Consultar cppman no cursor" })
+
 -- Compila e roda arquivos C e C++23 com módulos (import std) via F5
 vim.keymap.set("n", "<F5>", function()
-  local ft = vim.bo.filetype
-  if ft == "c" then
-    vim.cmd("w | !clang -std=c17 % -o %< && ./%<")
-  elseif ft == "cpp" then
-    -- clang++ não traz o módulo `std` pré-compilado; precisa ser gerado uma vez
-    -- a partir do .cppm que o pacote libc++ instala em /usr/share/libc++/v1.
-    local cache_dir = vim.fn.stdpath("cache") .. "/cpp-modules"
-    vim.fn.mkdir(cache_dir, "p")
-    local std_pcm = cache_dir .. "/std.pcm"
-    local build = ""
-    if vim.fn.filereadable(std_pcm) == 0 then
-      build = "clang++ -std=c++23 -stdlib=libc++ -Wno-reserved-module-identifier "
-        .. "--precompile /usr/share/libc++/v1/std.cppm -o " .. std_pcm .. " && "
-    end
-    vim.cmd(
-      "w | !" .. build .. "clang++ -std=c++23 -stdlib=libc++ -fprebuilt-module-path="
-        .. cache_dir .. " % -o %< && ./%<"
-    )
-  end
+	local ft = vim.bo.filetype
+	if ft == "c" then
+		vim.cmd("w | !clang -std=c17 % -o %< && ./%<")
+	elseif ft == "cpp" then
+		local cache_dir = vim.fn.stdpath("cache") .. "/cpp-modules"
+		vim.fn.mkdir(cache_dir, "p")
+		local std_pcm = cache_dir .. "/std.pcm"
+		local build = ""
+		if vim.fn.filereadable(std_pcm) == 0 then
+			build = "clang++ -std=c++23 -stdlib=libc++ -Wno-reserved-module-identifier "
+				.. "--precompile /usr/share/libc++/v1/std.cppm -o "
+				.. std_pcm
+				.. " && "
+		end
+		vim.cmd(
+			"w | !"
+				.. build
+				.. "clang++ -std=c++23 -stdlib=libc++ -fprebuilt-module-path="
+				.. cache_dir
+				.. " % -o %< && ./%<"
+		)
+	end
 end, { desc = "Compile and Run C/C++ with Modules" })
