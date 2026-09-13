@@ -61,7 +61,7 @@ vim.diagnostic.config({
 vim.keymap.set("n", "<F5>", function()
   local ft = vim.bo.filetype
   if ft == "c" then
-    vim.cmd("w | !clang -std=c17 % -o %< && ./%<")
+    vim.cmd("w | !clang -std=c17 -g -O0 % -o %< && ./%<")
   elseif ft == "cpp" then
     -- clang++ não traz o módulo `std` pré-compilado; precisa ser gerado uma vez
     -- a partir do .cppm que o pacote libc++ instala em /usr/share/libc++/v1.
@@ -74,7 +74,7 @@ vim.keymap.set("n", "<F5>", function()
         .. "--precompile /usr/share/libc++/v1/std.cppm -o " .. std_pcm .. " && "
     end
     vim.cmd(
-      "w | !" .. build .. "clang++ -std=c++23 -stdlib=libc++ -fprebuilt-module-path="
+      "w | !" .. build .. "clang++ -std=c++23 -stdlib=libc++ -g -O0 -fprebuilt-module-path="
         .. cache_dir .. " % -o %< && ./%<"
     )
   end
