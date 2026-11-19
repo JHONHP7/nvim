@@ -22,9 +22,24 @@ vim.list_extend(
   )
 )
 
+-- jdtls >= 1.63 exige Java 25 para rodar; o projeto continua compilando com 21
+local sdk_java = home .. "/.sdkman/candidates/java"
+local java25 = sdk_java .. "/25.0.5.1+2-tem/bin/java"
+
 local config = {
+  settings = {
+    java = {
+      configuration = {
+        runtimes = {
+          { name = "JavaSE-21", path = sdk_java .. "/21.0.11-zulu", default = true },
+          { name = "JavaSE-17", path = sdk_java .. "/17.0.13-tem" },
+        },
+      },
+    },
+  },
+
   cmd = {
-    "java",
+    java25,
     "-javaagent:" .. home .. "/.config/nvim/lombok/lombok.jar",
     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
     "-Dosgi.bundles.defaultStartLevel=4",
